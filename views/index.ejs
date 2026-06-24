@@ -23,6 +23,10 @@
   </header>
 
   <div class="toolbar">
+    <div class="search-form">
+      <label for="item-search">Search</label>
+      <input type="search" id="item-search" placeholder="Search items, brands, origins…" autocomplete="off">
+    </div>
     <form method="GET" action="/" class="sort-form">
       <label for="sort">Sort</label>
       <select name="sort" id="sort" onchange="this.form.submit()">
@@ -33,14 +37,17 @@
     </form>
   </div>
 
-  <main>
+  <p id="no-results" class="no-results" hidden>No items match your search.</p>
+
+  <main id="catalog">
     <% categories.forEach(function (category) { %>
       <section class="category">
         <h2><%= category %></h2>
         <div class="items">
           <% catalog.filter(function (item) { return item.category === category; }).forEach(function (item) { %>
             <% const qty = basketMap.get(item.id) || 0; %>
-            <article class="item">
+            <% const searchText = [item.name, item.brand, item.productType, item.category, item.sourcingPractice, item.country].join(' ').toLowerCase(); %>
+            <article class="item" data-search="<%= searchText %>">
               <div class="item-image">
                 <button type="button" class="zoom-trigger">
                   <img src="<%= item.image %>" alt="<%= item.productType %>" loading="lazy">
@@ -73,5 +80,6 @@
 
   <%- include('partials/lightbox') %>
   <script src="/public/js/basket.js" defer></script>
+  <script src="/public/js/search.js" defer></script>
 </body>
 </html>
