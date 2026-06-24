@@ -30,7 +30,9 @@
         <% items.forEach(function (item) { %>
           <article class="basket-row">
             <div class="item-image basket-image">
-              <img src="<%= item.image %>" alt="<%= item.productType %>" loading="lazy">
+              <button type="button" class="zoom-trigger">
+                <img src="<%= item.image %>" alt="<%= item.productType %>" loading="lazy">
+              </button>
             </div>
             <div class="basket-row-info">
               <p class="item-brand"><%= item.brand %></p>
@@ -61,5 +63,7 @@
   <footer>
     <a href="/review" class="btn">Finish Shopping</a>
   </footer>
+
+  <%- include('partials/lightbox') %>
 </body>
 </html>

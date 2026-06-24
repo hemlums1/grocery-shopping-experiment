@@ -42,7 +42,9 @@
             <% const qty = basketMap.get(item.id) || 0; %>
             <article class="item">
               <div class="item-image">
-                <img src="<%= item.image %>" alt="<%= item.productType %>" loading="lazy">
+                <button type="button" class="zoom-trigger">
+                  <img src="<%= item.image %>" alt="<%= item.productType %>" loading="lazy">
+                </button>
               </div>
               <p class="item-brand"><%= item.brand %></p>
               <h3><%= item.name %></h3>
@@ -68,5 +70,7 @@
   <footer>
     <a href="/review" class="btn">Finish Shopping</a>
   </footer>
+
+  <%- include('partials/lightbox') %>
 </body>
 </html>

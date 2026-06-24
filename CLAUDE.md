@@ -69,7 +69,15 @@ Decisions along the way are being made by Claude as each phase is reached (per w
 
 Styled after [erewhon.com/shop](https://erewhon.com/shop) per Gavin's request (premium-minimalist grocery aesthetic), minus its irrelevant categories. **Caveat: Claude could not actually view the reference site** — the Claude in Chrome extension wasn't connected, and a plain fetch of a JS-heavy page only returned a generic "premium, minimalist" impression, not the real layout/colors/type. The current design is built from general knowledge of Erewhon's known branding (black/white/cream, generous whitespace, clean typography, large uncluttered product photography) rather than direct observation. Treat the current look as a reasoned best-effort draft, not a verified match — Gavin should eyeball `localhost:3000` and redirect specifics.
 
-Current implementation: warm off-white background (`#faf8f4`), near-black text/borders, no bright accent colors except the Nutri-Score badges (which keep their real A-E colors since that's a recognizable standard, not a style choice). "Fraunces" (Google Fonts) for headings/product names, system sans-serif for body/labels. Sharp corners throughout (no border-radius on cards), uppercase letter-spaced small text for category headers and brand labels. One photo per product type via `object-fit: cover` in a square frame.
+Current implementation: warm off-white background (`#faf8f4`), near-black text/borders, no bright accent colors except the Nutri-Score badges (which keep their real A-E colors since that's a recognizable standard, not a style choice). "Fraunces" (Google Fonts) for headings/product names, system sans-serif for body/labels. Sharp corners throughout (no border-radius on cards), uppercase letter-spaced small text for category headers and brand labels.
+
+## Image Zoom
+
+Every product image (on `/`, `/basket`, and `/review`) is wrapped in a `.zoom-trigger` button. Clicking it opens a full-screen lightbox showing the *uncropped* image (`object-fit: contain`, vs. the thumbnail's `object-fit: cover`) — added because the square thumbnail crop cuts off parts of some of Gavin's photos, and this gives a way to see the whole picture. Closes via the X button, clicking anywhere in the lightbox, or Escape.
+
+Implementation: `views/partials/lightbox.ejs` (shared markup, included once per page) + `public/js/lightbox.js` (vanilla JS, event delegation, no dependencies — consistent with the project's no-framework approach). The thumbnail's already-loaded `<img src>` is reused directly, so opening the lightbox costs no extra network request.
+
+**Verified behaviorally, not just structurally** — Claude in Chrome still wouldn't connect (4th attempt this session), so instead of stopping at "the HTML looks right," the actual `lightbox.js` was executed against the real rendered page in a jsdom sandbox (a temporary dev-only dependency, installed with `--no-save` and removed immediately after — never touched `package.json`). Confirmed: click opens with the correct image per item (not stuck on whichever was clicked first), and all three close paths (X, background, Escape) work. This is real DOM/event verification, not a guess — but still not the same as a human actually looking at it, which remains outstanding for this feature like the rest of the visual design.
 
 ## Sorting, Basket View & Mobile
 
