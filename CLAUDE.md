@@ -29,7 +29,7 @@ Decisions along the way are being made by Claude as each phase is reached (per w
 
 ## Deployment
 
-- **Live URL:** https://grocery-web-production.up.railway.app
+- **Live URL:** https://starryknight.up.railway.app (changed from the original `grocery-web-production.up.railway.app`, which now 404s — discovered mid-session, not something Claude changed; Gavin appears to be configuring Railway directly in parallel with this session, including briefly adding then removing a custom domain `schellingout.com` that Claude observed but didn't touch). **Always verify the current domain with `railway domain list --service grocery-web` rather than trusting this value blindly** — it's evidently not stable.
 - **GitHub:** https://github.com/hemlums1/grocery-shopping-experiment (public). Pushing to `main` auto-deploys via Railway's GitHub integration — no manual deploy step.
 - **Railway project:** "grocery-shopping-experiment", two services: `Postgres` (database) and `grocery-web` (the app, GitHub-connected). `DATABASE_URL` on `grocery-web` is a Railway variable *reference* (`${{Postgres.DATABASE_URL}}`), not a copied value — it stays correct automatically if Postgres's credentials ever rotate.
 - **Production secrets:** `COOKIE_SECRET` and `EXPORT_KEY` were freshly generated for production — **deliberately different values from the local `.env`**, so a compromise of one environment doesn't compromise the other. Neither value is written here or anywhere else in this repo (it's public) — check them with `railway variable list --service grocery-web --kv` if you need them.
