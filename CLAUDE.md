@@ -23,9 +23,18 @@ Decisions along the way are being made by Claude as each phase is reached (per w
 3. ~~**Core experiment logic**~~ — session identity, random condition assignment, basket, hard budget cap, submit flow. ✅ Done.
 4. ~~**Catalog content**~~ — placeholder items/categories/production details, conditions config. ✅ Done.
 5. ~~**Local end-to-end test**~~ — run it, exercise every condition, verify DB writes and randomization. ✅ Done (see Environment Notes).
-6. **Railway setup** — account/billing (Gavin), GitHub repo + push-to-deploy vs CLI deploy (confirm before pushing), provision Postgres plugin. ⬅ Next.
-7. ~~**Data export path**~~ — `GET /admin/export.csv`, secret-protected. ✅ Done (see Data Export section). Remember to set `EXPORT_KEY` on Railway during deploy.
-8. **Deploy & launch** — verify the live URL end-to-end, dry run, then share with participants.
+6. ~~**Railway setup**~~ — public GitHub repo, push-to-deploy, Postgres plugin. ✅ Done (see Deployment section).
+7. ~~**Data export path**~~ — `GET /admin/export.csv`, secret-protected. ✅ Done (see Data Export section).
+8. ~~**Deploy & launch**~~ — live URL verified end-to-end. ✅ Done. Still open: how participants get the link, target sample size, teardown timing (Gavin's call, not built yet).
+
+## Deployment
+
+- **Live URL:** https://grocery-web-production.up.railway.app
+- **GitHub:** https://github.com/hemlums1/grocery-shopping-experiment (public). Pushing to `main` auto-deploys via Railway's GitHub integration — no manual deploy step.
+- **Railway project:** "grocery-shopping-experiment", two services: `Postgres` (database) and `grocery-web` (the app, GitHub-connected). `DATABASE_URL` on `grocery-web` is a Railway variable *reference* (`${{Postgres.DATABASE_URL}}`), not a copied value — it stays correct automatically if Postgres's credentials ever rotate.
+- **Production secrets:** `COOKIE_SECRET` and `EXPORT_KEY` were freshly generated for production — **deliberately different values from the local `.env`**, so a compromise of one environment doesn't compromise the other. Neither value is written here or anywhere else in this repo (it's public) — check them with `railway variable list --service grocery-web --kv` if you need them.
+- **Verified end-to-end on the live URL** (not just locally): homepage renders all 106 items, a static image asset serves, the full shop → basket → review → confirm → done flow works against the real production database, and the export route correctly 404s with no/wrong key and returns valid CSV with the right key. A test session created during this verification was deleted from the production database afterward — production should currently have zero session rows.
+- **Local Postgres connection note:** Railway's `DATABASE_URL` (`postgres.railway.internal`) only resolves *inside* Railway's network. To reach the database from this laptop (e.g. to inspect/clean data), use the Postgres service's `DATABASE_PUBLIC_URL` instead — get it with `railway variable list --service Postgres --json`.
 
 ## Experiment Design
 
@@ -86,7 +95,7 @@ Per working-agreement rule 1: decisions below were made by Claude when each phas
 | Schema creation | Startup script (`CREATE TABLE IF NOT EXISTS …`) run on boot | Self-contained and reproducible; no separate manual migration step to forget |
 | Repeat visits (same browser) | Resume same in-progress session/basket | Simplest behavior; revisit if duplicate-submission prevention turns out to matter for data quality |
 | Local dev database | Postgres.app (standalone local install) | Machine had no Homebrew/Docker; Gavin chose to install Postgres.app directly rather than route dev traffic through Railway |
-| Data export | Direct DB access via Railway's dashboard/CLI, no `/admin/export` route (yet) | Zero extra code and zero extra public attack surface; add a route later only if direct access proves inconvenient |
+| Data export (superseded — see below) | Direct DB access via Railway's dashboard/CLI, no `/admin/export` route | Was the right call until an actual export mechanism was requested; superseded once it was |
 | Catalog port | Replaced placeholder catalog with the full 106-item spreadsheet design in `src/catalog.js` | Spreadsheet was reviewed/approved in principle; styling work needed the real fields (brand, sourcing, Nutri-Score) to be meaningful |
 | Visual reference verification | Proceeded from general brand knowledge + a weak fetch signal, not a direct look | Claude in Chrome extension wouldn't connect (tried twice); Gavin chose to proceed rather than keep troubleshooting the connection |
 | Spreadsheet formula verification | Verified Summary sheet formulas independently via a plain Python pass over the same data, not LibreOffice recalc | LibreOffice isn't installed locally; installing a ~1GB office suite for 6 formulas was disproportionate |
@@ -95,6 +104,10 @@ Per working-agreement rule 1: decisions below were made by Claude when each phas
 | Review page scope | Read-only (no qty controls), unlike the basket page | Confirm-before-commit screens shouldn't blend with editing — "Back to Shopping" is the deliberate way to change something, not inline fiddling |
 | Reopen history | Not tracked — re-finishing just overwrites `submitted_at` | Simplest behavior matching "go back" literally; flagged to Gavin that this means no audit trail of edits, only the final state |
 | Data export mechanism | Secret-protected CSV route over the data already in Postgres, not Google Sheets/Airtable/a DB GUI client | Gavin's explicit choice among presented options — zero new external accounts/credentials, builds on existing data capture |
+| GitHub/Railway auth | Gavin ran `gh auth login` and `railway login` himself; Claude only used the CLIs afterward | OAuth/account login is his to grant, not Claude's to drive, even though both tools needed installing first |
+| Production secrets | Freshly generated `COOKIE_SECRET`/`EXPORT_KEY` for Railway, distinct from local `.env` values; neither written into any committed file | Standard practice — a leaked dev secret shouldn't compromise production, and the repo is public |
+| `DATABASE_URL` on the web service | Set as a Railway variable reference (`${{Postgres.DATABASE_URL}}`), not a copy-pasted connection string | Stays correct automatically if Postgres credentials ever rotate; avoids a stale hardcoded value |
+| Post-deploy DB cleanup | Deleted the one test session created while verifying the live deploy | Production is the real system of record from now on — unlike local dev, leftover test rows there would pollute actual study data |
 | Export row shape | Long/tidy (one row per basket line item, session columns repeated), not one-row-per-respondent with a JSON blob | Matches how the data will actually get analyzed (e.g. cross-tabbing condition against item attributes) rather than requiring Gavin to parse JSON in Excel first |
 
 **Not Claude's to decide** (study logistics, left open for Gavin): how participants receive the link, target sample size, and when the site comes down after data collection ends.
