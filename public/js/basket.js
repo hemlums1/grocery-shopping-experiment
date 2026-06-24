@@ -45,10 +45,11 @@
     if (!form) return;
     e.preventDefault();
 
+    var actionField = e.submitter && e.submitter.name ? e.submitter.name : 'action';
+    var actionValue = e.submitter ? e.submitter.value : '';
+
     var formData = new FormData(form);
-    if (e.submitter && e.submitter.name) {
-      formData.set(e.submitter.name, e.submitter.value);
-    }
+    formData.set(actionField, actionValue);
     // express.urlencoded() only parses application/x-www-form-urlencoded, not
     // the multipart/form-data fetch would send for a raw FormData body.
     var params = new URLSearchParams(formData);
@@ -58,6 +59,7 @@
 
     fetch(form.action, {
       method: 'POST',
+      credentials: 'same-origin',
       headers: { Accept: 'application/json' },
       body: params,
     })
@@ -91,9 +93,21 @@
         updateBasketLink(data.basketCount);
         updateTotalFooter(data.total, data.budgetCents);
       })
-      .catch(function () {
+      .catch(function (err) {
         // Fetch failed entirely (network/server error) — fall back to a real
-        // submission rather than leaving the UI stuck silently.
+        // submission rather than leaving the UI stuck silently. form.submit()
+        // doesn't simulate a button click, so the action field would be lost
+        // unless we pin it down with a real input first.
+        console.error('basket update via fetch failed, falling back to a full submit:', err);
+        var hidden = form.querySelector('input[name="' + actionField + '"]');
+        if (!hidden) {
+          hidden = document.createElement('input');
+          hidden.type = 'hidden';
+          hidden.name = actionField;
+          form.appendChild(hidden);
+        }
+        hidden.value = actionValue;
+        buttons.forEach(function (b) { b.disabled = false; });
         form.submit();
       });
   });
