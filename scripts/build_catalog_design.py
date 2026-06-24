@@ -50,8 +50,6 @@ ROWS = [
     ("cheese-brand-organic","Dairy & Eggs","Cheddar Cheese","Green Pasture Co. Organic Grass-Fed Cheddar Cheese (8 oz block)","Green Pasture Co.","Brand","Yes","Pasture-Raised/Grass-Fed","USA (Vermont)","D",7.49),
     ("yogurt-sb-plain","Dairy & Eggs","Yogurt","EveryDay Basics Plain Yogurt (32 oz)","EveryDay Basics","Off-Brand","No","Conventional Dairy","USA","B",3.29),
     ("yogurt-brand-plain","Dairy & Eggs","Yogurt","Green Pasture Co. Plain Yogurt (32 oz)","Green Pasture Co.","Brand","No","Conventional Dairy","USA","B",4.49),
-    ("yogurt-sb-vanilla","Dairy & Eggs","Yogurt","EveryDay Basics Vanilla Yogurt (32 oz)","EveryDay Basics","Off-Brand","No","Conventional Dairy","USA","D",3.79),
-    ("yogurt-brand-vanilla","Dairy & Eggs","Yogurt","Green Pasture Co. Vanilla Yogurt (32 oz)","Green Pasture Co.","Brand","No","Conventional Dairy","USA","D",5.29),
     ("yogurt-sb-organic-plain","Dairy & Eggs","Yogurt","EveryDay Basics Organic Plain Yogurt (32 oz)","EveryDay Basics","Off-Brand","Yes","Pasture-Raised","USA","B",5.49),
     ("yogurt-brand-organic-plain","Dairy & Eggs","Yogurt","Green Pasture Co. Organic Plain Yogurt (32 oz)","Green Pasture Co.","Brand","Yes","Pasture-Raised","USA","B",6.99),
     ("butter-sb-conv","Dairy & Eggs","Butter","EveryDay Basics Butter (1 lb)","EveryDay Basics","Off-Brand","No","Conventional Dairy","USA (Wisconsin)","E",3.99),
@@ -178,7 +176,7 @@ legend_rows = [
     ("Organic", "Whether the product is certified organic."),
     ("Sourcing Practice", "Ethicality-of-sourcing label, category-appropriate: e.g. Factory-Farmed vs Free-Range (meat/eggs), Farmed vs Wild-Caught (seafood), Fair-Trade Certified vs Standard (coffee/chocolate/bananas), Locally Grown vs Imported (domestic produce)."),
     ("Country of Origin", "Where the product is sourced from; part of the ethicality-of-sourcing dimension alongside Sourcing Practice."),
-    ("Nutri-Score", "European front-of-pack nutrition grade, A (healthiest) to E (least healthy), color-coded to the official scheme. Reflects the food itself, not its brand/organic/ethics status — e.g. a raw apple is grade A whether organic or not. Varies within a product type only where a genuinely different formulation exists (e.g. plain vs. sweetened yogurt, white vs. whole-wheat bread)."),
+    ("Nutri-Score", "European front-of-pack nutrition grade, A (healthiest) to E (least healthy), color-coded to the official scheme. Reflects the food itself, not its brand/organic/ethics status — e.g. a raw apple is grade A whether organic or not. Varies within a product type only where a genuinely different formulation exists (e.g. plain corn flakes vs. frosted, white vs. whole-wheat bread)."),
     ("Price", "Fictional USD retail price. Within any matched pair, Off-Brand < Brand, and conventional < organic/ethically-sourced."),
 ]
 for r in legend_rows:
@@ -221,5 +219,6 @@ summary.column_dimensions["B"].width = 12
 summary.column_dimensions["C"].width = 20
 summary.column_dimensions["D"].width = 16
 
-wb.save("/Users/gavin/grocery-shopping-experiment/catalog-design.xlsx")
+import os
+wb.save(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "catalog-design.xlsx"))
 print(f"Wrote {len(ROWS)} items")
