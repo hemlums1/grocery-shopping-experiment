@@ -18,7 +18,10 @@
         Spent $<%= (total / 100).toFixed(2) %> &middot;
         Remaining $<%= ((budget - total) / 100).toFixed(2) %>
       </div>
-      <a href="/basket" class="basket-link">Basket (<%= basketCount %>)</a>
+      <a href="/basket" class="basket-link">
+        <img src="/public/images/ui/cart.png" alt="" class="cart-icon">
+        <span class="basket-count-text">Basket (<%= basketCount %>)</span>
+      </a>
     </div>
   </header>
 

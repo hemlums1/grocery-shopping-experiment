@@ -19,8 +19,11 @@
 
   function updateBasketLink(basketCount) {
     var link = document.querySelector('.basket-link');
-    if (link && /^Basket \(/.test(link.textContent.trim())) {
-      link.textContent = 'Basket (' + basketCount + ')';
+    if (!link) return;
+    var countText = link.querySelector('.basket-count-text');
+    var target = countText || link;
+    if (/^Basket \(/.test(target.textContent.trim())) {
+      target.textContent = 'Basket (' + basketCount + ')';
     }
   }
 

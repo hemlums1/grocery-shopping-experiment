@@ -57,6 +57,9 @@ h1, h2, h3 {
 }
 
 .basket-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
   font-size: 0.75rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -69,6 +72,11 @@ h1, h2, h3 {
 .basket-link:hover {
   color: #555;
   border-color: #555;
+}
+
+.cart-icon {
+  width: 16px;
+  height: 16px;
 }
 
 .toolbar {
