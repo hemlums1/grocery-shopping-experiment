@@ -1,0 +1,180 @@
+// Catalog content design lives in catalog-design.xlsx — keep this in sync with that file.
+// priceCents is derived from the spreadsheet's Price column (USD * 100).
+// image is shared across all variants of the same productType (per Gavin's request:
+// "all the orange juice items have the same picture").
+
+function img(slug) {
+  return `/public/images/items/${slug}.jpeg`;
+}
+
+const CATALOG = [
+  // Produce
+  { id: 'apples-sb-conv', name: 'EveryDay Basics Apples (2 lb bag)', category: 'Produce', productType: 'Apples', image: img('apples'), brand: 'EveryDay Basics', brandTier: 'Off-Brand', organic: false, sourcingPractice: 'Conventional', country: 'USA (Washington)', nutriScore: 'A', priceCents: 299 },
+  { id: 'apples-brand-conv', name: 'Sunrise Farms Apples (2 lb bag)', category: 'Produce', productType: 'Apples', image: img('apples'), brand: 'Sunrise Farms', brandTier: 'Brand', organic: false, sourcingPractice: 'Conventional', country: 'USA (Washington)', nutriScore: 'A', priceCents: 379 },
+  { id: 'apples-sb-organic', name: 'EveryDay Basics Organic Apples (2 lb bag)', category: 'Produce', productType: 'Apples', image: img('apples'), brand: 'EveryDay Basics', brandTier: 'Off-Brand', organic: true, sourcingPractice: 'Organic Farming', country: 'USA (Washington)', nutriScore: 'A', priceCents: 449 },
+  { id: 'apples-brand-organic', name: 'Sunrise Farms Organic Apples (2 lb bag)', category: 'Produce', productType: 'Apples', image: img('apples'), brand: 'Sunrise Farms', brandTier: 'Brand', organic: true, sourcingPractice: 'Organic Farming', country: 'USA (Washington)', nutriScore: 'A', priceCents: 599 },
+
+  { id: 'bananas-sb-std', name: 'EveryDay Basics Bananas (per lb)', category: 'Produce', productType: 'Bananas', image: img('bananas'), brand: 'EveryDay Basics', brandTier: 'Off-Brand', organic: false, sourcingPractice: 'Standard Sourcing', country: 'Ecuador', nutriScore: 'A', priceCents: 59 },
+  { id: 'bananas-brand-std', name: 'Sunrise Farms Bananas (per lb)', category: 'Produce', productType: 'Bananas', image: img('bananas'), brand: 'Sunrise Farms', brandTier: 'Brand', organic: false, sourcingPractice: 'Standard Sourcing', country: 'Ecuador', nutriScore: 'A', priceCents: 79 },
+  { id: 'bananas-sb-ft', name: 'EveryDay Basics Fair Trade Bananas (per lb)', category: 'Produce', productType: 'Bananas', image: img('bananas'), brand: 'EveryDay Basics', brandTier: 'Off-Brand', organic: false, sourcingPractice: 'Fair-Trade Certified', country: 'Ecuador', nutriScore: 'A', priceCents: 99 },
+  { id: 'bananas-brand-ft-org', name: 'Sunrise Farms Fair Trade Organic Bananas (per lb)', category: 'Produce', productType: 'Bananas', image: img('bananas'), brand: 'Sunrise Farms', brandTier: 'Brand', organic: true, sourcingPractice: 'Fair-Trade Certified', country: 'Ecuador', nutriScore: 'A', priceCents: 149 },
+
+  { id: 'tomatoes-sb-imp', name: 'EveryDay Basics Tomatoes (per lb)', category: 'Produce', productType: 'Tomatoes', image: img('tomatoes'), brand: 'EveryDay Basics', brandTier: 'Off-Brand', organic: false, sourcingPractice: 'Imported', country: 'Mexico', nutriScore: 'A', priceCents: 149 },
+  { id: 'tomatoes-brand-imp', name: 'Sunrise Farms Tomatoes (per lb)', category: 'Produce', productType: 'Tomatoes', image: img('tomatoes'), brand: 'Sunrise Farms', brandTier: 'Brand', organic: false, sourcingPractice: 'Imported', country: 'Mexico', nutriScore: 'A', priceCents: 199 },
+  { id: 'tomatoes-sb-local-org', name: 'EveryDay Basics Local Organic Tomatoes (per lb)', category: 'Produce', productType: 'Tomatoes', image: img('tomatoes'), brand: 'EveryDay Basics', brandTier: 'Off-Brand', organic: true, sourcingPractice: 'Locally Grown', country: 'USA (California)', nutriScore: 'A', priceCents: 299 },
+  { id: 'tomatoes-brand-local-org', name: 'Sunrise Farms Local Organic Tomatoes (per lb)', category: 'Produce', productType: 'Tomatoes', image: img('tomatoes'), brand: 'Sunrise Farms', brandTier: 'Brand', organic: true, sourcingPractice: 'Locally Grown', country: 'USA (California)', nutriScore: 'A', priceCents: 379 },
+
+  { id: 'spinach-sb-conv', name: 'EveryDay Basics Spinach (5 oz bag)', category: 'Produce', productType: 'Spinach', image: img('spinach'), brand: 'EveryDay Basics', brandTier: 'Off-Brand', organic: false, sourcingPractice: 'Conventional', country: 'USA (California)', nutriScore: 'A', priceCents: 229 },
+  { id: 'spinach-brand-conv', name: 'Sunrise Farms Spinach (5 oz bag)', category: 'Produce', productType: 'Spinach', image: img('spinach'), brand: 'Sunrise Farms', brandTier: 'Brand', organic: false, sourcingPractice: 'Conventional', country: 'USA (California)', nutriScore: 'A', priceCents: 299 },
+  { id: 'spinach-sb-organic', name: 'EveryDay Basics Organic Spinach (5 oz bag)', category: 'Produce', productType: 'Spinach', image: img('spinach'), brand: 'EveryDay Basics', brandTier: 'Off-Brand', organic: true, sourcingPractice: 'Organic Farming', country: 'USA (California)', nutriScore: 'A', priceCents: 379 },
+  { id: 'spinach-brand-organic', name: 'Sunrise Farms Organic Spinach (5 oz bag)', category: 'Produce', productType: 'Spinach', image: img('spinach'), brand: 'Sunrise Farms', brandTier: 'Brand', organic: true, sourcingPractice: 'Organic Farming', country: 'USA (California)', nutriScore: 'A', priceCents: 459 },
+
+  { id: 'potatoes-sb-conv', name: 'EveryDay Basics Russet Potatoes (5 lb bag)', category: 'Produce', productType: 'Potatoes', image: img('potatoes'), brand: 'EveryDay Basics', brandTier: 'Off-Brand', organic: false, sourcingPractice: 'Conventional', country: 'USA (Idaho)', nutriScore: 'B', priceCents: 349 },
+  { id: 'potatoes-brand-conv', name: 'Sunrise Farms Russet Potatoes (5 lb bag)', category: 'Produce', productType: 'Potatoes', image: img('potatoes'), brand: 'Sunrise Farms', brandTier: 'Brand', organic: false, sourcingPractice: 'Conventional', country: 'USA (Idaho)', nutriScore: 'B', priceCents: 429 },
+  { id: 'potatoes-sb-organic', name: 'EveryDay Basics Organic Russet Potatoes (5 lb bag)', category: 'Produce', productType: 'Potatoes', image: img('potatoes'), brand: 'EveryDay Basics', brandTier: 'Off-Brand', organic: true, sourcingPractice: 'Organic Farming', country: 'USA (Idaho)', nutriScore: 'B', priceCents: 549 },
+  { id: 'potatoes-brand-organic', name: 'Sunrise Farms Organic Russet Potatoes (5 lb bag)', category: 'Produce', productType: 'Potatoes', image: img('potatoes'), brand: 'Sunrise Farms', brandTier: 'Brand', organic: true, sourcingPractice: 'Organic Farming', country: 'USA (Idaho)', nutriScore: 'B', priceCents: 649 },
+
+  // Dairy & Eggs
+  { id: 'milk-sb-conv', name: 'EveryDay Basics Whole Milk (1 gal)', category: 'Dairy & Eggs', productType: 'Milk', image: img('milk'), brand: 'EveryDay Basics', brandTier: 'Off-Brand', organic: false, sourcingPractice: 'Conventional Dairy', country: 'USA (Wisconsin)', nutriScore: 'C', priceCents: 329 },
+  { id: 'milk-brand-conv', name: 'Green Pasture Co. Whole Milk (1 gal)', category: 'Dairy & Eggs', productType: 'Milk', image: img('milk'), brand: 'Green Pasture Co.', brandTier: 'Brand', organic: false, sourcingPractice: 'Conventional Dairy', country: 'USA (Wisconsin)', nutriScore: 'C', priceCents: 449 },
+  { id: 'milk-sb-organic', name: 'EveryDay Basics Organic Whole Milk (1 gal)', category: 'Dairy & Eggs', productType: 'Milk', image: img('milk'), brand: 'EveryDay Basics', brandTier: 'Off-Brand', organic: true, sourcingPractice: 'Pasture-Raised', country: 'USA (Wisconsin)', nutriScore: 'C', priceCents: 529 },
+  { id: 'milk-brand-organic', name: 'Green Pasture Co. Organic Grass-Fed Whole Milk (1 gal)', category: 'Dairy & Eggs', productType: 'Milk', image: img('milk'), brand: 'Green Pasture Co.', brandTier: 'Brand', organic: true, sourcingPractice: 'Pasture-Raised/Grass-Fed', country: 'USA (Vermont)', nutriScore: 'C', priceCents: 699 },
+
+  { id: 'eggs-sb-caged', name: 'EveryDay Basics Eggs (dozen, large)', category: 'Dairy & Eggs', productType: 'Eggs', image: img('eggs'), brand: 'EveryDay Basics', brandTier: 'Off-Brand', organic: false, sourcingPractice: 'Caged', country: 'USA (Iowa)', nutriScore: 'B', priceCents: 249 },
+  { id: 'eggs-brand-caged', name: 'Heritage Range Eggs (dozen, large)', category: 'Dairy & Eggs', productType: 'Eggs', image: img('eggs'), brand: 'Heritage Range', brandTier: 'Brand', organic: false, sourcingPractice: 'Caged', country: 'USA (Iowa)', nutriScore: 'B', priceCents: 329 },
+  { id: 'eggs-sb-freerange', name: 'EveryDay Basics Free-Range Eggs (dozen, large)', category: 'Dairy & Eggs', productType: 'Eggs', image: img('eggs'), brand: 'EveryDay Basics', brandTier: 'Off-Brand', organic: false, sourcingPractice: 'Free-Range', country: 'USA (Iowa)', nutriScore: 'B', priceCents: 449 },
+  { id: 'eggs-brand-pasture-org', name: 'Heritage Range Pasture-Raised Organic Eggs (dozen, large)', category: 'Dairy & Eggs', productType: 'Eggs', image: img('eggs'), brand: 'Heritage Range', brandTier: 'Brand', organic: true, sourcingPractice: 'Pasture-Raised', country: 'USA (Iowa)', nutriScore: 'B', priceCents: 629 },
+
+  { id: 'cheese-sb-conv', name: 'EveryDay Basics Cheddar Cheese (8 oz block)', category: 'Dairy & Eggs', productType: 'Cheddar Cheese', image: img('cheddar-cheese'), brand: 'EveryDay Basics', brandTier: 'Off-Brand', organic: false, sourcingPractice: 'Conventional Dairy', country: 'USA (Wisconsin)', nutriScore: 'D', priceCents: 349 },
+  { id: 'cheese-brand-conv', name: 'Green Pasture Co. Cheddar Cheese (8 oz block)', category: 'Dairy & Eggs', productType: 'Cheddar Cheese', image: img('cheddar-cheese'), brand: 'Green Pasture Co.', brandTier: 'Brand', organic: false, sourcingPractice: 'Conventional Dairy', country: 'USA (Wisconsin)', nutriScore: 'D', priceCents: 499 },
+  { id: 'cheese-sb-organic', name: 'EveryDay Basics Organic Cheddar Cheese (8 oz block)', category: 'Dairy & Eggs', productType: 'Cheddar Cheese', image: img('cheddar-cheese'), brand: 'EveryDay Basics', brandTier: 'Off-Brand', organic: true, sourcingPractice: 'Pasture-Raised', country: 'USA (Vermont)', nutriScore: 'D', priceCents: 599 },
+  { id: 'cheese-brand-organic', name: 'Green Pasture Co. Organic Grass-Fed Cheddar Cheese (8 oz block)', category: 'Dairy & Eggs', productType: 'Cheddar Cheese', image: img('cheddar-cheese'), brand: 'Green Pasture Co.', brandTier: 'Brand', organic: true, sourcingPractice: 'Pasture-Raised/Grass-Fed', country: 'USA (Vermont)', nutriScore: 'D', priceCents: 749 },
+
+  { id: 'yogurt-sb-plain', name: 'EveryDay Basics Plain Yogurt (32 oz)', category: 'Dairy & Eggs', productType: 'Yogurt', image: img('yogurt'), brand: 'EveryDay Basics', brandTier: 'Off-Brand', organic: false, sourcingPractice: 'Conventional Dairy', country: 'USA', nutriScore: 'B', priceCents: 329 },
+  { id: 'yogurt-brand-plain', name: 'Green Pasture Co. Plain Yogurt (32 oz)', category: 'Dairy & Eggs', productType: 'Yogurt', image: img('yogurt'), brand: 'Green Pasture Co.', brandTier: 'Brand', organic: false, sourcingPractice: 'Conventional Dairy', country: 'USA', nutriScore: 'B', priceCents: 449 },
+  { id: 'yogurt-sb-vanilla', name: 'EveryDay Basics Vanilla Yogurt (32 oz)', category: 'Dairy & Eggs', productType: 'Yogurt', image: img('yogurt'), brand: 'EveryDay Basics', brandTier: 'Off-Brand', organic: false, sourcingPractice: 'Conventional Dairy', country: 'USA', nutriScore: 'D', priceCents: 379 },
+  { id: 'yogurt-brand-vanilla', name: 'Green Pasture Co. Vanilla Yogurt (32 oz)', category: 'Dairy & Eggs', productType: 'Yogurt', image: img('yogurt'), brand: 'Green Pasture Co.', brandTier: 'Brand', organic: false, sourcingPractice: 'Conventional Dairy', country: 'USA', nutriScore: 'D', priceCents: 529 },
+  { id: 'yogurt-sb-organic-plain', name: 'EveryDay Basics Organic Plain Yogurt (32 oz)', category: 'Dairy & Eggs', productType: 'Yogurt', image: img('yogurt'), brand: 'EveryDay Basics', brandTier: 'Off-Brand', organic: true, sourcingPractice: 'Pasture-Raised', country: 'USA', nutriScore: 'B', priceCents: 549 },
+  { id: 'yogurt-brand-organic-plain', name: 'Green Pasture Co. Organic Plain Yogurt (32 oz)', category: 'Dairy & Eggs', productType: 'Yogurt', image: img('yogurt'), brand: 'Green Pasture Co.', brandTier: 'Brand', organic: true, sourcingPractice: 'Pasture-Raised', country: 'USA', nutriScore: 'B', priceCents: 699 },
+
+  { id: 'butter-sb-conv', name: 'EveryDay Basics Butter (1 lb)', category: 'Dairy & Eggs', productType: 'Butter', image: img('butter'), brand: 'EveryDay Basics', brandTier: 'Off-Brand', organic: false, sourcingPractice: 'Conventional Dairy', country: 'USA (Wisconsin)', nutriScore: 'E', priceCents: 399 },
+  { id: 'butter-brand-conv', name: 'Green Pasture Co. Butter (1 lb)', category: 'Dairy & Eggs', productType: 'Butter', image: img('butter'), brand: 'Green Pasture Co.', brandTier: 'Brand', organic: false, sourcingPractice: 'Conventional Dairy', country: 'USA (Wisconsin)', nutriScore: 'E', priceCents: 549 },
+  { id: 'butter-sb-organic', name: 'EveryDay Basics Organic Butter (1 lb)', category: 'Dairy & Eggs', productType: 'Butter', image: img('butter'), brand: 'EveryDay Basics', brandTier: 'Off-Brand', organic: true, sourcingPractice: 'Pasture-Raised', country: 'USA (Vermont)', nutriScore: 'E', priceCents: 649 },
+  { id: 'butter-brand-organic', name: 'Green Pasture Co. Organic Grass-Fed Butter (1 lb)', category: 'Dairy & Eggs', productType: 'Butter', image: img('butter'), brand: 'Green Pasture Co.', brandTier: 'Brand', organic: true, sourcingPractice: 'Pasture-Raised/Grass-Fed', country: 'New Zealand', nutriScore: 'E', priceCents: 799 },
+
+  // Meat & Seafood
+  { id: 'chicken-sb-factory', name: 'EveryDay Basics Chicken Breast (1 lb)', category: 'Meat & Seafood', productType: 'Chicken Breast', image: img('chicken-breast'), brand: 'EveryDay Basics', brandTier: 'Off-Brand', organic: false, sourcingPractice: 'Factory-Farmed', country: 'USA (Arkansas)', nutriScore: 'A', priceCents: 399 },
+  { id: 'chicken-brand-factory', name: 'Heritage Range Chicken Breast (1 lb)', category: 'Meat & Seafood', productType: 'Chicken Breast', image: img('chicken-breast'), brand: 'Heritage Range', brandTier: 'Brand', organic: false, sourcingPractice: 'Factory-Farmed', country: 'USA (Arkansas)', nutriScore: 'A', priceCents: 499 },
+  { id: 'chicken-sb-freerange', name: 'EveryDay Basics Free-Range Chicken Breast (1 lb)', category: 'Meat & Seafood', productType: 'Chicken Breast', image: img('chicken-breast'), brand: 'EveryDay Basics', brandTier: 'Off-Brand', organic: false, sourcingPractice: 'Free-Range', country: 'USA (Pennsylvania)', nutriScore: 'A', priceCents: 649 },
+  { id: 'chicken-brand-freerange-org', name: 'Heritage Range Organic Free-Range Chicken Breast (1 lb)', category: 'Meat & Seafood', productType: 'Chicken Breast', image: img('chicken-breast'), brand: 'Heritage Range', brandTier: 'Brand', organic: true, sourcingPractice: 'Free-Range', country: 'USA (Pennsylvania)', nutriScore: 'A', priceCents: 899 },
+
+  { id: 'beef-sb-factory', name: 'EveryDay Basics Ground Beef 80/20 (1 lb)', category: 'Meat & Seafood', productType: 'Ground Beef', image: img('ground-beef'), brand: 'EveryDay Basics', brandTier: 'Off-Brand', organic: false, sourcingPractice: 'Factory-Farmed (Grain-Fed)', country: 'USA (Nebraska)', nutriScore: 'C', priceCents: 549 },
+  { id: 'beef-brand-factory', name: 'Heritage Range Ground Beef 80/20 (1 lb)', category: 'Meat & Seafood', productType: 'Ground Beef', image: img('ground-beef'), brand: 'Heritage Range', brandTier: 'Brand', organic: false, sourcingPractice: 'Factory-Farmed (Grain-Fed)', country: 'USA (Nebraska)', nutriScore: 'C', priceCents: 699 },
+  { id: 'beef-sb-grassfed', name: 'EveryDay Basics Grass-Fed Ground Beef (1 lb)', category: 'Meat & Seafood', productType: 'Ground Beef', image: img('ground-beef'), brand: 'EveryDay Basics', brandTier: 'Off-Brand', organic: false, sourcingPractice: 'Grass-Fed/Pasture-Raised', country: 'USA (Montana)', nutriScore: 'C', priceCents: 849 },
+  { id: 'beef-brand-grassfed-org', name: 'Heritage Range Organic Grass-Fed Ground Beef (1 lb)', category: 'Meat & Seafood', productType: 'Ground Beef', image: img('ground-beef'), brand: 'Heritage Range', brandTier: 'Brand', organic: true, sourcingPractice: 'Grass-Fed/Pasture-Raised', country: 'New Zealand', nutriScore: 'C', priceCents: 1099 },
+
+  { id: 'bacon-sb-factory', name: 'EveryDay Basics Bacon (12 oz)', category: 'Meat & Seafood', productType: 'Bacon', image: img('bacon'), brand: 'EveryDay Basics', brandTier: 'Off-Brand', organic: false, sourcingPractice: 'Factory-Farmed', country: 'USA (Iowa)', nutriScore: 'E', priceCents: 499 },
+  { id: 'bacon-brand-factory', name: 'Heritage Range Bacon (12 oz)', category: 'Meat & Seafood', productType: 'Bacon', image: img('bacon'), brand: 'Heritage Range', brandTier: 'Brand', organic: false, sourcingPractice: 'Factory-Farmed', country: 'USA (Iowa)', nutriScore: 'E', priceCents: 649 },
+  { id: 'bacon-sb-freerange', name: 'EveryDay Basics Uncured Free-Range Bacon (12 oz)', category: 'Meat & Seafood', productType: 'Bacon', image: img('bacon'), brand: 'EveryDay Basics', brandTier: 'Off-Brand', organic: false, sourcingPractice: 'Free-Range', country: 'USA (Iowa)', nutriScore: 'E', priceCents: 799 },
+  { id: 'bacon-brand-freerange-org', name: 'Heritage Range Organic Free-Range Bacon (12 oz)', category: 'Meat & Seafood', productType: 'Bacon', image: img('bacon'), brand: 'Heritage Range', brandTier: 'Brand', organic: true, sourcingPractice: 'Free-Range', country: 'USA (Iowa)', nutriScore: 'E', priceCents: 999 },
+
+  { id: 'salmon-sb-farmed', name: 'EveryDay Basics Salmon Fillet (1 lb)', category: 'Meat & Seafood', productType: 'Salmon Fillet', image: img('salmon'), brand: 'EveryDay Basics', brandTier: 'Off-Brand', organic: false, sourcingPractice: 'Farmed', country: 'Chile', nutriScore: 'A', priceCents: 799 },
+  { id: 'salmon-brand-farmed', name: 'Heritage Range Salmon Fillet (1 lb)', category: 'Meat & Seafood', productType: 'Salmon Fillet', image: img('salmon'), brand: 'Heritage Range', brandTier: 'Brand', organic: false, sourcingPractice: 'Farmed', country: 'Norway', nutriScore: 'A', priceCents: 949 },
+  { id: 'salmon-sb-wild', name: 'EveryDay Basics Wild-Caught Salmon Fillet (1 lb)', category: 'Meat & Seafood', productType: 'Salmon Fillet', image: img('salmon'), brand: 'EveryDay Basics', brandTier: 'Off-Brand', organic: false, sourcingPractice: 'Wild-Caught', country: 'USA (Alaska)', nutriScore: 'A', priceCents: 1199 },
+  { id: 'salmon-brand-wild-msc', name: 'Heritage Range Wild-Caught Salmon Fillet (1 lb)', category: 'Meat & Seafood', productType: 'Salmon Fillet', image: img('salmon'), brand: 'Heritage Range', brandTier: 'Brand', organic: false, sourcingPractice: 'Wild-Caught, MSC Certified', country: 'USA (Alaska)', nutriScore: 'A', priceCents: 1499 },
+
+  { id: 'tuna-sb-std', name: 'EveryDay Basics Chunk Tuna in Water (5 oz)', category: 'Meat & Seafood', productType: 'Canned Tuna', image: img('canned-tuna'), brand: 'EveryDay Basics', brandTier: 'Off-Brand', organic: false, sourcingPractice: 'Standard', country: 'Thailand', nutriScore: 'A', priceCents: 129 },
+  { id: 'tuna-brand-std', name: 'Pinnacle Foods Chunk Tuna in Water (5 oz)', category: 'Meat & Seafood', productType: 'Canned Tuna', image: img('canned-tuna'), brand: 'Pinnacle Foods', brandTier: 'Brand', organic: false, sourcingPractice: 'Standard', country: 'Thailand', nutriScore: 'A', priceCents: 199 },
+  { id: 'tuna-sb-wild', name: 'EveryDay Basics Wild-Caught Tuna in Water (5 oz)', category: 'Meat & Seafood', productType: 'Canned Tuna', image: img('canned-tuna'), brand: 'EveryDay Basics', brandTier: 'Off-Brand', organic: false, sourcingPractice: 'Wild-Caught, Dolphin-Safe', country: 'USA', nutriScore: 'A', priceCents: 249 },
+  { id: 'tuna-brand-wild-oil', name: 'Pinnacle Foods Wild-Caught Tuna in Olive Oil (5 oz)', category: 'Meat & Seafood', productType: 'Canned Tuna', image: img('canned-tuna'), brand: 'Pinnacle Foods', brandTier: 'Brand', organic: false, sourcingPractice: 'Wild-Caught, Dolphin-Safe', country: 'Italy', nutriScore: 'B', priceCents: 349 },
+
+  // Bakery & Grains
+  { id: 'bread-sb-white', name: 'EveryDay Basics White Bread (24 oz loaf)', category: 'Bakery & Grains', productType: 'Bread', image: img('bread'), brand: 'EveryDay Basics', brandTier: 'Off-Brand', organic: false, sourcingPractice: 'Standard', country: 'USA', nutriScore: 'C', priceCents: 249 },
+  { id: 'bread-brand-white', name: 'Golden Harvest White Bread (24 oz loaf)', category: 'Bakery & Grains', productType: 'Bread', image: img('bread'), brand: 'Golden Harvest', brandTier: 'Brand', organic: false, sourcingPractice: 'Standard', country: 'USA', nutriScore: 'C', priceCents: 349 },
+  { id: 'bread-sb-wheat', name: 'EveryDay Basics Whole Wheat Bread (24 oz loaf)', category: 'Bakery & Grains', productType: 'Bread', image: img('bread'), brand: 'EveryDay Basics', brandTier: 'Off-Brand', organic: false, sourcingPractice: 'Standard', country: 'USA', nutriScore: 'A', priceCents: 299 },
+  { id: 'bread-brand-wheat-org', name: 'Golden Harvest Organic Whole Wheat Bread (24 oz loaf)', category: 'Bakery & Grains', productType: 'Bread', image: img('bread'), brand: 'Golden Harvest', brandTier: 'Brand', organic: true, sourcingPractice: 'Standard', country: 'USA', nutriScore: 'A', priceCents: 499 },
+
+  { id: 'pasta-sb-reg', name: 'EveryDay Basics Spaghetti (1 lb box)', category: 'Bakery & Grains', productType: 'Pasta', image: img('spaghetti'), brand: 'EveryDay Basics', brandTier: 'Off-Brand', organic: false, sourcingPractice: 'Standard', country: 'Italy', nutriScore: 'B', priceCents: 129 },
+  { id: 'pasta-brand-reg', name: 'Golden Harvest Spaghetti (1 lb box)', category: 'Bakery & Grains', productType: 'Pasta', image: img('spaghetti'), brand: 'Golden Harvest', brandTier: 'Brand', organic: false, sourcingPractice: 'Standard', country: 'Italy', nutriScore: 'B', priceCents: 199 },
+  { id: 'pasta-sb-wheat', name: 'EveryDay Basics Whole Wheat Spaghetti (1 lb box)', category: 'Bakery & Grains', productType: 'Pasta', image: img('spaghetti'), brand: 'EveryDay Basics', brandTier: 'Off-Brand', organic: false, sourcingPractice: 'Standard', country: 'Italy', nutriScore: 'A', priceCents: 179 },
+  { id: 'pasta-brand-wheat-org', name: 'Golden Harvest Organic Whole Wheat Spaghetti (1 lb box)', category: 'Bakery & Grains', productType: 'Pasta', image: img('spaghetti'), brand: 'Golden Harvest', brandTier: 'Brand', organic: true, sourcingPractice: 'Standard', country: 'Italy', nutriScore: 'A', priceCents: 349 },
+
+  { id: 'rice-sb-white', name: 'EveryDay Basics White Rice (2 lb bag)', category: 'Bakery & Grains', productType: 'Rice', image: img('rice'), brand: 'EveryDay Basics', brandTier: 'Off-Brand', organic: false, sourcingPractice: 'Standard', country: 'USA', nutriScore: 'B', priceCents: 299 },
+  { id: 'rice-brand-white', name: 'Golden Harvest White Rice (2 lb bag)', category: 'Bakery & Grains', productType: 'Rice', image: img('rice'), brand: 'Golden Harvest', brandTier: 'Brand', organic: false, sourcingPractice: 'Standard', country: 'USA', nutriScore: 'B', priceCents: 399 },
+  { id: 'rice-sb-brown', name: 'EveryDay Basics Brown Rice (2 lb bag)', category: 'Bakery & Grains', productType: 'Rice', image: img('rice'), brand: 'EveryDay Basics', brandTier: 'Off-Brand', organic: false, sourcingPractice: 'Standard', country: 'USA', nutriScore: 'A', priceCents: 349 },
+  { id: 'rice-brand-brown-org', name: 'Golden Harvest Organic Brown Rice (2 lb bag)', category: 'Bakery & Grains', productType: 'Rice', image: img('rice'), brand: 'Golden Harvest', brandTier: 'Brand', organic: true, sourcingPractice: 'Standard', country: 'USA', nutriScore: 'A', priceCents: 549 },
+
+  { id: 'cereal-sb-corn', name: 'EveryDay Basics Corn Flakes (14 oz box)', category: 'Bakery & Grains', productType: 'Cereal', image: img('cereal'), brand: 'EveryDay Basics', brandTier: 'Off-Brand', organic: false, sourcingPractice: 'Standard', country: 'USA', nutriScore: 'C', priceCents: 299 },
+  { id: 'cereal-brand-frosted', name: 'Pinnacle Foods Frosted Corn Flakes (14 oz box)', category: 'Bakery & Grains', productType: 'Cereal', image: img('cereal'), brand: 'Pinnacle Foods', brandTier: 'Brand', organic: false, sourcingPractice: 'Standard', country: 'USA', nutriScore: 'D', priceCents: 449 },
+  { id: 'cereal-sb-bran', name: 'EveryDay Basics Bran Flakes (14 oz box)', category: 'Bakery & Grains', productType: 'Cereal', image: img('cereal'), brand: 'EveryDay Basics', brandTier: 'Off-Brand', organic: false, sourcingPractice: 'Standard', country: 'USA', nutriScore: 'A', priceCents: 349 },
+  { id: 'cereal-brand-bran-org', name: 'Pinnacle Foods Organic Bran Flakes (14 oz box)', category: 'Bakery & Grains', productType: 'Cereal', image: img('cereal'), brand: 'Pinnacle Foods', brandTier: 'Brand', organic: true, sourcingPractice: 'Standard', country: 'USA', nutriScore: 'A', priceCents: 599 },
+
+  // Pantry & Condiments
+  { id: 'oil-sb-reg', name: 'EveryDay Basics Olive Oil (16.9 oz)', category: 'Pantry & Condiments', productType: 'Olive Oil', image: img('olive-oil'), brand: 'EveryDay Basics', brandTier: 'Off-Brand', organic: false, sourcingPractice: 'Standard', country: 'Spain', nutriScore: 'C', priceCents: 599 },
+  { id: 'oil-brand-evoo', name: 'Golden Harvest Extra Virgin Olive Oil (16.9 oz)', category: 'Pantry & Condiments', productType: 'Olive Oil', image: img('olive-oil'), brand: 'Golden Harvest', brandTier: 'Brand', organic: false, sourcingPractice: 'Standard', country: 'Spain', nutriScore: 'C', priceCents: 899 },
+  { id: 'oil-sb-organic', name: 'EveryDay Basics Organic Extra Virgin Olive Oil (16.9 oz)', category: 'Pantry & Condiments', productType: 'Olive Oil', image: img('olive-oil'), brand: 'EveryDay Basics', brandTier: 'Off-Brand', organic: true, sourcingPractice: 'Standard', country: 'Italy', nutriScore: 'C', priceCents: 1099 },
+  { id: 'oil-brand-organic-estate', name: 'Golden Harvest Organic Estate-Grown Olive Oil (16.9 oz)', category: 'Pantry & Condiments', productType: 'Olive Oil', image: img('olive-oil'), brand: 'Golden Harvest', brandTier: 'Brand', organic: true, sourcingPractice: 'Sustainably Harvested', country: 'Italy', nutriScore: 'C', priceCents: 1499 },
+
+  { id: 'tomcan-sb-reg', name: 'EveryDay Basics Diced Tomatoes (28 oz can)', category: 'Pantry & Condiments', productType: 'Canned Tomatoes', image: img('canned-tomatoes'), brand: 'EveryDay Basics', brandTier: 'Off-Brand', organic: false, sourcingPractice: 'Standard', country: 'USA', nutriScore: 'A', priceCents: 149 },
+  { id: 'tomcan-brand-reg', name: 'Golden Harvest Diced Tomatoes (28 oz can)', category: 'Pantry & Condiments', productType: 'Canned Tomatoes', image: img('canned-tomatoes'), brand: 'Golden Harvest', brandTier: 'Brand', organic: false, sourcingPractice: 'Standard', country: 'USA', nutriScore: 'A', priceCents: 229 },
+  { id: 'tomcan-sb-organic', name: 'EveryDay Basics Organic Diced Tomatoes (28 oz can)', category: 'Pantry & Condiments', productType: 'Canned Tomatoes', image: img('canned-tomatoes'), brand: 'EveryDay Basics', brandTier: 'Off-Brand', organic: true, sourcingPractice: 'Standard', country: 'USA', nutriScore: 'A', priceCents: 299 },
+  { id: 'tomcan-brand-organic-sm', name: 'Golden Harvest Organic San Marzano Diced Tomatoes (28 oz can)', category: 'Pantry & Condiments', productType: 'Canned Tomatoes', image: img('canned-tomatoes'), brand: 'Golden Harvest', brandTier: 'Brand', organic: true, sourcingPractice: 'Standard', country: 'Italy', nutriScore: 'A', priceCents: 449 },
+
+  { id: 'pb-sb-reg', name: 'EveryDay Basics Peanut Butter (16 oz jar)', category: 'Pantry & Condiments', productType: 'Peanut Butter', image: img('peanut-butter'), brand: 'EveryDay Basics', brandTier: 'Off-Brand', organic: false, sourcingPractice: 'Standard', country: 'USA (Georgia)', nutriScore: 'D', priceCents: 299 },
+  { id: 'pb-brand-reg', name: 'Pinnacle Foods Peanut Butter (16 oz jar)', category: 'Pantry & Condiments', productType: 'Peanut Butter', image: img('peanut-butter'), brand: 'Pinnacle Foods', brandTier: 'Brand', organic: false, sourcingPractice: 'Standard', country: 'USA (Georgia)', nutriScore: 'D', priceCents: 429 },
+  { id: 'pb-sb-natural', name: 'EveryDay Basics Natural Peanut Butter, No Sugar Added (16 oz jar)', category: 'Pantry & Condiments', productType: 'Peanut Butter', image: img('peanut-butter'), brand: 'EveryDay Basics', brandTier: 'Off-Brand', organic: false, sourcingPractice: 'Standard', country: 'USA (Georgia)', nutriScore: 'C', priceCents: 449 },
+  { id: 'pb-brand-natural-org', name: 'Pinnacle Foods Organic Natural Peanut Butter (16 oz jar)', category: 'Pantry & Condiments', productType: 'Peanut Butter', image: img('peanut-butter'), brand: 'Pinnacle Foods', brandTier: 'Brand', organic: true, sourcingPractice: 'Standard', country: 'USA (Georgia)', nutriScore: 'C', priceCents: 649 },
+
+  { id: 'coffee-sb-std', name: 'EveryDay Basics Ground Coffee (12 oz bag)', category: 'Pantry & Condiments', productType: 'Coffee', image: img('coffee'), brand: 'EveryDay Basics', brandTier: 'Off-Brand', organic: false, sourcingPractice: 'Standard Sourcing', country: 'Brazil', nutriScore: 'A', priceCents: 699 },
+  { id: 'coffee-brand-std', name: 'Pinnacle Foods Ground Coffee (12 oz bag)', category: 'Pantry & Condiments', productType: 'Coffee', image: img('coffee'), brand: 'Pinnacle Foods', brandTier: 'Brand', organic: false, sourcingPractice: 'Standard Sourcing', country: 'Brazil', nutriScore: 'A', priceCents: 899 },
+  { id: 'coffee-sb-ft', name: 'EveryDay Basics Fair Trade Ground Coffee (12 oz bag)', category: 'Pantry & Condiments', productType: 'Coffee', image: img('coffee'), brand: 'EveryDay Basics', brandTier: 'Off-Brand', organic: false, sourcingPractice: 'Fair-Trade Certified', country: 'Colombia', nutriScore: 'A', priceCents: 1049 },
+  { id: 'coffee-brand-ft-org', name: 'Pinnacle Foods Fair Trade Organic Ground Coffee (12 oz bag)', category: 'Pantry & Condiments', productType: 'Coffee', image: img('coffee'), brand: 'Pinnacle Foods', brandTier: 'Brand', organic: true, sourcingPractice: 'Fair-Trade Certified', country: 'Ethiopia', nutriScore: 'A', priceCents: 1399 },
+
+  // Snacks & Beverages
+  { id: 'choc-sb-milk', name: 'EveryDay Basics Milk Chocolate Bar (3.5 oz)', category: 'Snacks & Beverages', productType: 'Chocolate Bar', image: img('chocolate'), brand: 'EveryDay Basics', brandTier: 'Off-Brand', organic: false, sourcingPractice: 'Standard Sourcing', country: "Cote d'Ivoire", nutriScore: 'E', priceCents: 199 },
+  { id: 'choc-brand-milk', name: 'Pinnacle Foods Milk Chocolate Bar (3.5 oz)', category: 'Snacks & Beverages', productType: 'Chocolate Bar', image: img('chocolate'), brand: 'Pinnacle Foods', brandTier: 'Brand', organic: false, sourcingPractice: 'Standard Sourcing', country: "Cote d'Ivoire", nutriScore: 'E', priceCents: 299 },
+  { id: 'choc-sb-dark-ft', name: 'EveryDay Basics Fair Trade Dark Chocolate Bar 70% (3.5 oz)', category: 'Snacks & Beverages', productType: 'Chocolate Bar', image: img('chocolate'), brand: 'EveryDay Basics', brandTier: 'Off-Brand', organic: false, sourcingPractice: 'Fair-Trade Certified', country: 'Ghana', nutriScore: 'D', priceCents: 349 },
+  { id: 'choc-brand-dark-ft-org', name: 'Pinnacle Foods Fair Trade Organic Dark Chocolate Bar 70% (3.5 oz)', category: 'Snacks & Beverages', productType: 'Chocolate Bar', image: img('chocolate'), brand: 'Pinnacle Foods', brandTier: 'Brand', organic: true, sourcingPractice: 'Fair-Trade Certified', country: 'Ecuador', nutriScore: 'D', priceCents: 499 },
+
+  { id: 'chips-sb-reg', name: 'EveryDay Basics Potato Chips (8 oz bag)', category: 'Snacks & Beverages', productType: 'Potato Chips', image: img('potato-chips'), brand: 'EveryDay Basics', brandTier: 'Off-Brand', organic: false, sourcingPractice: 'Standard', country: 'USA (Idaho)', nutriScore: 'E', priceCents: 249 },
+  { id: 'chips-brand-reg', name: 'Pinnacle Foods Potato Chips (8 oz bag)', category: 'Snacks & Beverages', productType: 'Potato Chips', image: img('potato-chips'), brand: 'Pinnacle Foods', brandTier: 'Brand', organic: false, sourcingPractice: 'Standard', country: 'USA (Idaho)', nutriScore: 'E', priceCents: 379 },
+  { id: 'chips-sb-reducedfat', name: 'EveryDay Basics Reduced Fat Potato Chips (8 oz bag)', category: 'Snacks & Beverages', productType: 'Potato Chips', image: img('potato-chips'), brand: 'EveryDay Basics', brandTier: 'Off-Brand', organic: false, sourcingPractice: 'Standard', country: 'USA (Idaho)', nutriScore: 'D', priceCents: 329 },
+  { id: 'chips-brand-avocado-org', name: 'Pinnacle Foods Organic Potato Chips, Avocado Oil (8 oz bag)', category: 'Snacks & Beverages', productType: 'Potato Chips', image: img('potato-chips'), brand: 'Pinnacle Foods', brandTier: 'Brand', organic: true, sourcingPractice: 'Standard', country: 'USA (Idaho)', nutriScore: 'D', priceCents: 499 },
+
+  { id: 'oj-sb-conc', name: 'EveryDay Basics Orange Juice, From Concentrate (64 oz)', category: 'Snacks & Beverages', productType: 'Orange Juice', image: img('orange-juice'), brand: 'EveryDay Basics', brandTier: 'Off-Brand', organic: false, sourcingPractice: 'Standard', country: 'USA (Florida)', nutriScore: 'C', priceCents: 299 },
+  { id: 'oj-brand-conc', name: 'Sunrise Farms Orange Juice, From Concentrate (64 oz)', category: 'Snacks & Beverages', productType: 'Orange Juice', image: img('orange-juice'), brand: 'Sunrise Farms', brandTier: 'Brand', organic: false, sourcingPractice: 'Standard', country: 'USA (Florida)', nutriScore: 'C', priceCents: 429 },
+  { id: 'oj-sb-nfc', name: 'EveryDay Basics Not-From-Concentrate Orange Juice (64 oz)', category: 'Snacks & Beverages', productType: 'Orange Juice', image: img('orange-juice'), brand: 'EveryDay Basics', brandTier: 'Off-Brand', organic: false, sourcingPractice: 'Standard', country: 'USA (Florida)', nutriScore: 'B', priceCents: 499 },
+  { id: 'oj-brand-nfc-org', name: 'Sunrise Farms Organic Not-From-Concentrate Orange Juice (64 oz)', category: 'Snacks & Beverages', productType: 'Orange Juice', image: img('orange-juice'), brand: 'Sunrise Farms', brandTier: 'Brand', organic: true, sourcingPractice: 'Standard', country: 'USA (Florida)', nutriScore: 'B', priceCents: 699 },
+];
+
+const NUTRI_COLORS = { A: '#038141', B: '#85BB2F', C: '#FECB02', D: '#EF7D00', E: '#E63E11' };
+
+const SORT_OPTIONS = [
+  { value: 'default', label: 'Default order' },
+  { value: 'price-asc', label: 'Price: Low to High' },
+  { value: 'price-desc', label: 'Price: High to Low' },
+  { value: 'name-asc', label: 'Name: A to Z' },
+  { value: 'name-desc', label: 'Name: Z to A' },
+  { value: 'nutri-asc', label: 'Nutri-Score: A to E' },
+  { value: 'nutri-desc', label: 'Nutri-Score: E to A' },
+];
+
+const SORTERS = {
+  'price-asc': (a, b) => a.priceCents - b.priceCents,
+  'price-desc': (a, b) => b.priceCents - a.priceCents,
+  'name-asc': (a, b) => a.name.localeCompare(b.name),
+  'name-desc': (a, b) => b.name.localeCompare(a.name),
+  'nutri-asc': (a, b) => a.nutriScore.localeCompare(b.nutriScore),
+  'nutri-desc': (a, b) => b.nutriScore.localeCompare(a.nutriScore),
+};
+
+function sortCatalog(catalog, sortBy) {
+  const sorter = SORTERS[sortBy];
+  return sorter ? [...catalog].sort(sorter) : catalog;
+}
+
+function findItem(itemId) {
+  return CATALOG.find((item) => item.id === itemId);
+}
+
+module.exports = { CATALOG, NUTRI_COLORS, SORT_OPTIONS, sortCatalog, findItem };

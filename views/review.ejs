@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Review Your Order</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,450;9..144,560&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/public/css/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <h1>Review Your Order</h1>
+    <div class="topbar-right">
+      <div class="budget" data-over="<%= total > budget %>">
+        Budget $<%= (budget / 100).toFixed(2) %> &middot;
+        Spent $<%= (total / 100).toFixed(2) %> &middot;
+        Remaining $<%= ((budget - total) / 100).toFixed(2) %>
+      </div>
+    </div>
+  </header>
+
+  <main class="basket-page">
+    <p class="review-intro">Take a moment to check everything below — this is what will be recorded once you confirm.</p>
+
+    <% if (items.length === 0) { %>
+      <p class="empty-basket">Your basket is empty.</p>
+    <% } else { %>
+      <div class="basket-list">
+        <% items.forEach(function (item) { %>
+          <article class="basket-row basket-row-readonly">
+            <div class="item-image basket-image">
+              <img src="<%= item.image %>" alt="<%= item.productType %>" loading="lazy">
+            </div>
+            <div class="basket-row-info">
+              <p class="item-brand"><%= item.brand %></p>
+              <h3><%= item.name %></h3>
+              <div class="item-meta">
+                <span class="nutri-badge" style="background:<%= nutriColors[item.nutriScore] %>"><%= item.nutriScore %></span>
+                <span class="sourcing"><%= item.sourcingPractice %> &middot; <%= item.country %></span>
+              </div>
+            </div>
+            <div class="basket-row-controls">
+              <p class="price"><%= item.quantity %> &times; $<%= (item.priceCents / 100).toFixed(2) %> = $<%= ((item.priceCents * item.quantity) / 100).toFixed(2) %></p>
+            </div>
+          </article>
+        <% }); %>
+      </div>
+    <% } %>
+
+    <p class="total">Total: $<%= (total / 100).toFixed(2) %> of $<%= (budget / 100).toFixed(2) %> budget</p>
+  </main>
+
+  <footer class="review-footer">
+    <a href="/basket" class="btn btn-secondary">&larr; Back to Shopping</a>
+    <form method="POST" action="/submit">
+      <button type="submit" class="btn">Confirm &amp; Finish Shopping</button>
+    </form>
+  </footer>
+</body>
+</html>

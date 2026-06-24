@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grocery Shop</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,450;9..144,560&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/public/css/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <h1>Grocery Shop</h1>
+    <div class="topbar-right">
+      <div class="budget" data-over="<%= total > budget %>">
+        Budget $<%= (budget / 100).toFixed(2) %> &middot;
+        Spent $<%= (total / 100).toFixed(2) %> &middot;
+        Remaining $<%= ((budget - total) / 100).toFixed(2) %>
+      </div>
+      <a href="/basket" class="basket-link">Basket (<%= basketCount %>)</a>
+    </div>
+  </header>
+
+  <div class="toolbar">
+    <form method="GET" action="/" class="sort-form">
+      <label for="sort">Sort</label>
+      <select name="sort" id="sort" onchange="this.form.submit()">
+        <% sortOptions.forEach(function (opt) { %>
+          <option value="<%= opt.value %>" <%= sortBy === opt.value ? 'selected' : '' %>><%= opt.label %></option>
+        <% }); %>
+      </select>
+    </form>
+  </div>
+
+  <main>
+    <% categories.forEach(function (category) { %>
+      <section class="category">
+        <h2><%= category %></h2>
+        <div class="items">
+          <% catalog.filter(function (item) { return item.category === category; }).forEach(function (item) { %>
+            <% const qty = basketMap.get(item.id) || 0; %>
+            <article class="item">
+              <div class="item-image">
+                <img src="<%= item.image %>" alt="<%= item.productType %>" loading="lazy">
+              </div>
+              <p class="item-brand"><%= item.brand %></p>
+              <h3><%= item.name %></h3>
+              <div class="item-meta">
+                <span class="nutri-badge" style="background:<%= nutriColors[item.nutriScore] %>"><%= item.nutriScore %></span>
+                <span class="sourcing"><%= (item.organic && !item.sourcingPractice.includes('Organic')) ? 'Organic · ' : '' %><%= item.sourcingPractice %> &middot; <%= item.country %></span>
+              </div>
+              <p class="price">$<%= (item.priceCents / 100).toFixed(2) %></p>
+
+              <form method="POST" action="/basket/update" class="qty-form">
+                <input type="hidden" name="itemId" value="<%= item.id %>">
+                <button name="action" value="decrement" <%= qty === 0 ? 'disabled' : '' %>>&minus;</button>
+                <span class="qty"><%= qty %></span>
+                <button name="action" value="increment" <%= (total + item.priceCents > budget) ? 'disabled' : '' %>>+</button>
+              </form>
+            </article>
+          <% }); %>
+        </div>
+      </section>
+    <% }); %>
+  </main>
+
+  <footer>
+    <a href="/review" class="btn">Finish Shopping</a>
+  </footer>
+</body>
+</html>

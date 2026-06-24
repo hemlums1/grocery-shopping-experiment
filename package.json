@@ -1,0 +1,21 @@
+{
+  "name": "grocery-shopping-experiment",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Research site for a grocery shopping habits experiment",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^16.4.7",
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "pg": "^8.13.1"
+  }
+}
