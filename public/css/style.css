@@ -161,6 +161,10 @@ main {
   gap: 0.4rem;
 }
 
+.item[hidden] {
+  display: none;
+}
+
 .item-image {
   aspect-ratio: 1 / 1;
   overflow: hidden;
