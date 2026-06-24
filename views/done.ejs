@@ -19,12 +19,12 @@
     <% } else { %>
       <ul class="done-list">
         <% items.forEach(function (item) { %>
-          <li><%= item.quantity %> &times; <%= item.name %> — $<%= ((item.priceCents * item.quantity) / 100).toFixed(2) %></li>
+          <li><%= item.quantity %> &times; <%= item.name %> — €<%= ((item.priceCents * item.quantity) / 100).toFixed(2) %></li>
         <% }); %>
       </ul>
     <% } %>
 
-    <p class="total">Total spent: $<%= (total / 100).toFixed(2) %> of $<%= (budget / 100).toFixed(2) %> budget</p>
+    <p class="total">Total spent: €<%= (total / 100).toFixed(2) %> of €<%= (budget / 100).toFixed(2) %> budget</p>
 
     <form method="POST" action="/reopen" class="reopen-form">
       <button type="submit" class="btn btn-secondary">Edit My Basket</button>

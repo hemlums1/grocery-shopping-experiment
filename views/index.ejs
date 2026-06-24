@@ -14,9 +14,9 @@
     <h1>Grocery Shop</h1>
     <div class="topbar-right">
       <div class="budget" data-over="<%= total > budget %>">
-        Budget $<%= (budget / 100).toFixed(2) %> &middot;
-        Spent $<%= (total / 100).toFixed(2) %> &middot;
-        Remaining $<%= ((budget - total) / 100).toFixed(2) %>
+        Budget €<%= (budget / 100).toFixed(2) %> &middot;
+        Spent €<%= (total / 100).toFixed(2) %> &middot;
+        Remaining €<%= ((budget - total) / 100).toFixed(2) %>
       </div>
       <a href="/basket" class="basket-link">
         <img src="/public/images/ui/cart.png" alt="" class="cart-icon">
@@ -62,7 +62,7 @@
                 <span class="nutri-badge" style="background:<%= nutriColors[item.nutriScore] %>"><%= item.nutriScore %></span>
                 <span class="sourcing"><%= (item.organic && !item.sourcingPractice.includes('Organic')) ? 'Organic · ' : '' %><%= item.sourcingPractice %> &middot; <%= item.country %></span>
               </div>
-              <p class="price">$<%= (item.priceCents / 100).toFixed(2) %></p>
+              <p class="price">€<%= (item.priceCents / 100).toFixed(2) %></p>
 
               <form method="POST" action="/basket/update" class="qty-form" data-price-cents="<%= item.priceCents %>">
                 <input type="hidden" name="itemId" value="<%= item.id %>">

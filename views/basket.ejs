@@ -14,9 +14,9 @@
     <h1>Your Basket</h1>
     <div class="topbar-right">
       <div class="budget" data-over="<%= total > budget %>">
-        Budget $<%= (budget / 100).toFixed(2) %> &middot;
-        Spent $<%= (total / 100).toFixed(2) %> &middot;
-        Remaining $<%= ((budget - total) / 100).toFixed(2) %>
+        Budget €<%= (budget / 100).toFixed(2) %> &middot;
+        Spent €<%= (total / 100).toFixed(2) %> &middot;
+        Remaining €<%= ((budget - total) / 100).toFixed(2) %>
       </div>
       <a href="/" class="basket-link">&larr; Continue Shopping</a>
     </div>
@@ -50,14 +50,14 @@
                 <span class="qty"><%= item.quantity %></span>
                 <button name="qtyAction" value="increment" <%= (total + item.priceCents > budget) ? 'disabled' : '' %>>+</button>
               </form>
-              <p class="price"><%= item.quantity %> &times; $<%= (item.priceCents / 100).toFixed(2) %> = $<%= ((item.priceCents * item.quantity) / 100).toFixed(2) %></p>
+              <p class="price"><%= item.quantity %> &times; €<%= (item.priceCents / 100).toFixed(2) %> = €<%= ((item.priceCents * item.quantity) / 100).toFixed(2) %></p>
             </div>
           </article>
         <% }); %>
       </div>
     <% } %>
 
-    <p class="total">Total: $<%= (total / 100).toFixed(2) %> of $<%= (budget / 100).toFixed(2) %> budget</p>
+    <p class="total">Total: €<%= (total / 100).toFixed(2) %> of €<%= (budget / 100).toFixed(2) %> budget</p>
   </main>
 
   <footer>

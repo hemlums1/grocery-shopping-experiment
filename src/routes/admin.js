@@ -9,10 +9,10 @@ const { findItem } = require('../catalog');
 // row (item fields blank) so completion-rate analysis has a true denominator
 // — a pure one-row-per-line-item export would silently drop empty baskets.
 const COLUMNS = [
-  'session_id', 'condition', 'budget_usd', 'status', 'created_at', 'submitted_at',
+  'session_id', 'condition', 'budget_eur', 'status', 'created_at', 'submitted_at',
   'session_item_count', 'item_id', 'item_name', 'category', 'product_type',
   'brand', 'brand_tier', 'organic', 'sourcing_practice', 'country', 'nutri_score',
-  'unit_price_usd', 'quantity', 'line_total_usd',
+  'unit_price_eur', 'quantity', 'line_total_eur',
 ];
 
 function isAuthorized(req) {
@@ -47,7 +47,7 @@ router.get('/export.csv', async (req, res, next) => {
       const base = {
         session_id: session.id,
         condition: session.condition_label,
-        budget_usd: (session.budget_cents / 100).toFixed(2),
+        budget_eur: (session.budget_cents / 100).toFixed(2),
         status: session.status,
         created_at: session.created_at ? session.created_at.toISOString() : '',
         submitted_at: session.submitted_at ? session.submitted_at.toISOString() : '',
@@ -73,9 +73,9 @@ router.get('/export.csv', async (req, res, next) => {
           sourcing_practice: item ? item.sourcingPractice : '',
           country: item ? item.country : '',
           nutri_score: item ? item.nutriScore : '',
-          unit_price_usd: item ? (item.priceCents / 100).toFixed(2) : '',
+          unit_price_eur: item ? (item.priceCents / 100).toFixed(2) : '',
           quantity: entry.quantity,
-          line_total_usd: item ? ((item.priceCents * entry.quantity) / 100).toFixed(2) : '',
+          line_total_eur: item ? ((item.priceCents * entry.quantity) / 100).toFixed(2) : '',
         });
       }
     }

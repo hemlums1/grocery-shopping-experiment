@@ -212,7 +212,7 @@ for r in range(2, last_row + 1):
         cell.border = BORDER
         cell.alignment = Alignment(horizontal="center", vertical="center") if col != 4 else Alignment(horizontal="left", vertical="center")
     price_cell = ws.cell(r, 11)
-    price_cell.number_format = '$#,##0.00'
+    price_cell.number_format = '€#,##0.00'
     nutri_cell = ws.cell(r, 10)
     grade = nutri_cell.value
     nutri_cell.fill = PatternFill("solid", start_color=NUTRI_COLORS[grade])
@@ -237,7 +237,7 @@ legend_rows = [
     ("Sourcing Practice", "Ethicality-of-sourcing label, category-appropriate: e.g. Factory-Farmed vs Free-Range (meat/eggs), Farmed vs Wild-Caught (seafood), Fair-Trade Certified vs Standard (coffee/chocolate/bananas), Locally Grown vs Imported (domestic produce)."),
     ("Country of Origin", "Where the product is sourced from; part of the ethicality-of-sourcing dimension alongside Sourcing Practice."),
     ("Nutri-Score", "European front-of-pack nutrition grade, A (healthiest) to E (least healthy), color-coded to the official scheme. Reflects the food itself, not its brand/organic/ethics status — e.g. a raw apple is grade A whether organic or not. Varies within a product type only where a genuinely different formulation exists (e.g. plain corn flakes vs. frosted, white vs. whole-wheat bread)."),
-    ("Price", "Fictional USD retail price. Within any matched pair, Off-Brand < Brand, and conventional < organic/ethically-sourced."),
+    ("Price", "Fictional EUR retail price. Within any matched pair, Off-Brand < Brand, and conventional < organic/ethically-sourced."),
 ]
 for r in legend_rows:
     legend.append(r)
@@ -266,9 +266,9 @@ for i, cat in enumerate(categories, start=2):
     summary.cell(i, 1, cat).font = BODY_FONT
     summary.cell(i, 2, f'=COUNTIF(Catalog!B:B,A{i})').font = BODY_FONT
     summary.cell(i, 3, f'=AVERAGEIFS(Catalog!K:K,Catalog!B:B,A{i},Catalog!F:F,"Off-Brand")').font = BODY_FONT
-    summary.cell(i, 3).number_format = '$#,##0.00'
+    summary.cell(i, 3).number_format = '€#,##0.00'
     summary.cell(i, 4, f'=AVERAGEIFS(Catalog!K:K,Catalog!B:B,A{i},Catalog!F:F,"Brand")').font = BODY_FONT
-    summary.cell(i, 4).number_format = '$#,##0.00'
+    summary.cell(i, 4).number_format = '€#,##0.00'
 
 total_row = len(categories) + 2
 summary.cell(total_row, 1, "TOTAL").font = Font(name=FONT, bold=True)

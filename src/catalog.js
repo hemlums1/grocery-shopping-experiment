@@ -1,5 +1,5 @@
 // Catalog content design lives in catalog-design.xlsx — keep this in sync with that file.
-// priceCents is derived from the spreadsheet's Price column (USD * 100).
+// priceCents is derived from the spreadsheet's Price column (EUR * 100).
 // image is unique per item, ordered by price within each productType
 // (1 = cheapest variant's photo ... 4 = priciest variant's photo).
 

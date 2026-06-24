@@ -13,6 +13,7 @@ import csv
 import io
 import json
 import os
+import ssl
 import subprocess
 import urllib.request
 from collections import defaultdict
@@ -56,9 +57,20 @@ def load_env():
     return env
 
 
+def _ssl_context():
+    """The python.org macOS build doesn't use the system Keychain CA store,
+    so HTTPS requests can fail with CERTIFICATE_VERIFY_FAILED. Use certifi's
+    bundle when available; fall back to the default context otherwise."""
+    try:
+        import certifi
+        return ssl.create_default_context(cafile=certifi.where())
+    except ImportError:
+        return ssl.create_default_context()
+
+
 def fetch_raw_rows(base_url, export_key):
     url = f"{base_url}/admin/export.csv?key={export_key}"
-    with urllib.request.urlopen(url) as resp:
+    with urllib.request.urlopen(url, context=_ssl_context()) as resp:
         text = resp.read().decode("utf-8")
     return list(csv.DictReader(io.StringIO(text)))
 
@@ -96,7 +108,7 @@ def enrich(rows, min_price_by_type, rank_by_id):
         if r["status"] != "submitted" or not r["item_id"]:
             continue
         qty = int(r["quantity"])
-        unit_cents = round(float(r["unit_price_usd"]) * 100)
+        unit_cents = round(float(r["unit_price_eur"]) * 100)
         product_type = r["product_type"]
         out = dict(r)
         out["quantity"] = qty
@@ -116,7 +128,7 @@ def submitted_session_bases(raw_rows):
     bases = {}
     for r in raw_rows:
         if r["status"] == "submitted" and r["session_id"] not in bases:
-            bases[r["session_id"]] = {"condition": r["condition"], "budget_usd": float(r["budget_usd"])}
+            bases[r["session_id"]] = {"condition": r["condition"], "budget_eur": float(r["budget_eur"])}
     return bases
 
 
@@ -137,14 +149,14 @@ def aggregate_respondent_summary(rows, bases):
         organic_qty = sum(i["quantity"] for i in items if i["organic"] == "Yes")
         brand_qty = sum(i["quantity"] for i in items if i["brand_tier"] == "Brand")
         rank_weighted = sum(i["rank"] * i["quantity"] for i in items if i["rank"])
-        budget_cents = round(base["budget_usd"] * 100)
+        budget_cents = round(base["budget_eur"] * 100)
         out.append({
             "session_id": session_id,
             "condition": base["condition"],
-            "budget_usd": base["budget_usd"],
+            "budget_eur": base["budget_eur"],
             "item_count": total_qty,
             "distinct_categories": len({i["category"] for i in items}),
-            "total_spent_usd": total_cents / 100,
+            "total_spent_eur": total_cents / 100,
             "pct_budget_used": (total_cents / budget_cents) if budget_cents else 0,
             "pct_organic_units": (organic_qty / total_qty) if total_qty else 0,
             "pct_brand_name_units": (brand_qty / total_qty) if total_qty else 0,
@@ -169,9 +181,9 @@ def aggregate_attribute_preference(rows):
                 "level": level,
                 "units": units,
                 "pct_of_units": (units / total_units) if total_units else 0,
-                "avg_premium_usd": (premium_total / units / 100) if units else 0,
+                "avg_premium_eur": (premium_total / units / 100) if units else 0,
             })
-    table.sort(key=lambda r: -r["avg_premium_usd"])
+    table.sort(key=lambda r: -r["avg_premium_eur"])
     return table
 
 
@@ -195,7 +207,7 @@ def aggregate_budget_attribute(rows):
                 "level": level,
                 "condition": condition,
                 "pct_of_units": (units / denom) if denom else 0,
-                "avg_premium_usd": (premium_total / units / 100) if units else 0,
+                "avg_premium_eur": (premium_total / units / 100) if units else 0,
             })
     table.sort(key=lambda r: (r["dimension"], r["level"], r["condition"]))
     return table
@@ -216,7 +228,7 @@ def aggregate_category_popularity(rows):
                 "name": name,
                 "units": units,
                 "pct_of_units": (units / total_units) if total_units else 0,
-                "spend_usd": cents / 100,
+                "spend_eur": cents / 100,
                 "pct_of_spend": (cents / total_cents) if total_cents else 0,
             }
             for name, (units, cents) in groups.items()
@@ -279,7 +291,7 @@ def write_table(ws, start_row, start_col, headers, data_rows, percent_cols=(), c
             if j in percent_cols:
                 cell.number_format = "0.0%"
             elif j in currency_cols:
-                cell.number_format = '$#,##0.00'
+                cell.number_format = '€#,##0.00'
     return start_row + 1 + len(data_rows)
 
 
@@ -328,11 +340,11 @@ def write_raw_data_sheet(wb, raw_rows, columns):
 
 def write_respondent_summary_sheet(wb, summary):
     ws = wb.create_sheet("Respondent Summary")
-    headers = ["Session ID", "Condition", "Budget ($)", "Items Purchased", "Distinct Categories",
-               "Total Spent ($)", "% Budget Used", "% Organic Units", "% Brand-Name Units", "Avg Price Rank Chosen"]
+    headers = ["Session ID", "Condition", "Budget (€)", "Items Purchased", "Distinct Categories",
+               "Total Spent (€)", "% Budget Used", "% Organic Units", "% Brand-Name Units", "Avg Price Rank Chosen"]
     rows = [[
-        s["session_id"], s["condition"], s["budget_usd"], s["item_count"], s["distinct_categories"],
-        s["total_spent_usd"], s["pct_budget_used"], s["pct_organic_units"], s["pct_brand_name_units"], s["avg_price_rank"],
+        s["session_id"], s["condition"], s["budget_eur"], s["item_count"], s["distinct_categories"],
+        s["total_spent_eur"], s["pct_budget_used"], s["pct_organic_units"], s["pct_brand_name_units"], s["avg_price_rank"],
     ] for s in summary]
     write_table(ws, 1, 1, headers, rows, percent_cols=(6, 7, 8), currency_cols=(2, 5))
     autosize_columns(ws, [38, 10, 11, 14, 16, 13, 12, 14, 16, 18])
@@ -341,8 +353,8 @@ def write_respondent_summary_sheet(wb, summary):
 
 def write_attribute_preference_sheet(wb, table):
     ws = wb.create_sheet("Attribute Preference")
-    headers = ["Dimension", "Level", "Units Purchased", "% of Units", "Avg Premium Paid ($)"]
-    rows = [[r["dimension"], r["level"], r["units"], r["pct_of_units"], r["avg_premium_usd"]] for r in table]
+    headers = ["Dimension", "Level", "Units Purchased", "% of Units", "Avg Premium Paid (€)"]
+    rows = [[r["dimension"], r["level"], r["units"], r["pct_of_units"], r["avg_premium_eur"]] for r in table]
     end_row = write_table(ws, 1, 1, headers, rows, percent_cols=(3,), currency_cols=(4,))
     autosize_columns(ws, [20, 28, 16, 12, 20])
 
@@ -350,30 +362,30 @@ def write_attribute_preference_sheet(wb, table):
     # on its own since it has many more levels than the others.
     core = [r for r in table if r["dimension"] != "Sourcing Practice"]
     sourcing = [r for r in table if r["dimension"] == "Sourcing Practice"]
-    core.sort(key=lambda r: -r["avg_premium_usd"])
-    sourcing.sort(key=lambda r: -r["avg_premium_usd"])
+    core.sort(key=lambda r: -r["avg_premium_eur"])
+    sourcing.sort(key=lambda r: -r["avg_premium_eur"])
 
     chart_row = end_row + 2
-    write_table(ws, chart_row, 1, ["Level", "Avg Premium Paid ($)"],
-                [[f"{r['dimension']}: {r['level']}", r["avg_premium_usd"]] for r in core])
+    write_table(ws, chart_row, 1, ["Level", "Avg Premium Paid (€)"],
+                [[f"{r['dimension']}: {r['level']}", r["avg_premium_eur"]] for r in core])
     data_ref = Reference(ws, min_col=2, min_row=chart_row, max_row=chart_row + len(core))
     cats_ref = Reference(ws, min_col=1, min_row=chart_row + 1, max_row=chart_row + len(core))
     add_bar_chart(ws, f"D{chart_row}", "Avg Premium Paid — Brand / Organic / Nutri-Score", data_ref, cats_ref,
-                  "Avg Premium Paid ($)", bar_dir="bar")
+                  "Avg Premium Paid (€)", bar_dir="bar")
 
     chart_row2 = chart_row + len(core) + 2
-    write_table(ws, chart_row2, 1, ["Sourcing Practice", "Avg Premium Paid ($)"],
-                [[r["level"], r["avg_premium_usd"]] for r in sourcing])
+    write_table(ws, chart_row2, 1, ["Sourcing Practice", "Avg Premium Paid (€)"],
+                [[r["level"], r["avg_premium_eur"]] for r in sourcing])
     data_ref2 = Reference(ws, min_col=2, min_row=chart_row2, max_row=chart_row2 + len(sourcing))
     cats_ref2 = Reference(ws, min_col=1, min_row=chart_row2 + 1, max_row=chart_row2 + len(sourcing))
     add_bar_chart(ws, f"D{chart_row2}", "Avg Premium Paid — Sourcing Practice", data_ref2, cats_ref2,
-                  "Avg Premium Paid ($)", bar_dir="bar")
+                  "Avg Premium Paid (€)", bar_dir="bar")
 
 
 def write_budget_attribute_sheet(wb, table):
     ws = wb.create_sheet("Budget x Attribute")
-    headers = ["Dimension", "Level", "Condition", "% of Units (within condition)", "Avg Premium Paid ($)"]
-    rows = [[r["dimension"], r["level"], r["condition"], r["pct_of_units"], r["avg_premium_usd"]] for r in table]
+    headers = ["Dimension", "Level", "Condition", "% of Units (within condition)", "Avg Premium Paid (€)"]
+    rows = [[r["dimension"], r["level"], r["condition"], r["pct_of_units"], r["avg_premium_eur"]] for r in table]
     end_row = write_table(ws, 1, 1, headers, rows, percent_cols=(3,), currency_cols=(4,))
     autosize_columns(ws, [20, 28, 11, 26, 20])
 
@@ -398,8 +410,8 @@ def write_budget_attribute_sheet(wb, table):
 def write_category_popularity_sheet(wb, by_category, by_product_type):
     ws = wb.create_sheet("Category Popularity")
     sheet_title(ws, "By Category")
-    headers = ["Category", "Units Purchased", "% of Units", "Spend ($)", "% of Spend"]
-    rows = [[c["name"], c["units"], c["pct_of_units"], c["spend_usd"], c["pct_of_spend"]] for c in by_category]
+    headers = ["Category", "Units Purchased", "% of Units", "Spend (€)", "% of Spend"]
+    rows = [[c["name"], c["units"], c["pct_of_units"], c["spend_eur"], c["pct_of_spend"]] for c in by_category]
     end_row = write_table(ws, 2, 1, headers, rows, percent_cols=(2, 4), currency_cols=(3,))
     autosize_columns(ws, [26, 16, 12, 12, 12])
 
@@ -408,12 +420,12 @@ def write_category_popularity_sheet(wb, by_category, by_product_type):
     add_bar_chart(ws, "G2", "Units Purchased by Category", data_ref, cats_ref, "Units")
 
     data_ref2 = Reference(ws, min_col=4, min_row=2, max_row=end_row - 1)
-    add_bar_chart(ws, "G18", "Spend ($) by Category", data_ref2, cats_ref, "Spend ($)")
+    add_bar_chart(ws, "G18", "Spend (€) by Category", data_ref2, cats_ref, "Spend (€)")
 
     type_row = end_row + 2
     ws.cell(row=type_row, column=1, value="By Product Type (detail, no chart)").font = TITLE_FONT
-    headers_t = ["Product Type", "Units Purchased", "% of Units", "Spend ($)", "% of Spend"]
-    rows_t = [[t["name"], t["units"], t["pct_of_units"], t["spend_usd"], t["pct_of_spend"]] for t in by_product_type]
+    headers_t = ["Product Type", "Units Purchased", "% of Units", "Spend (€)", "% of Spend"]
+    rows_t = [[t["name"], t["units"], t["pct_of_units"], t["spend_eur"], t["pct_of_spend"]] for t in by_product_type]
     write_table(ws, type_row + 1, 1, headers_t, rows_t, percent_cols=(2, 4), currency_cols=(3,))
 
 
@@ -448,7 +460,7 @@ def write_example_sheet(wb):
     sheet_title(ws, "")
     ws["A3"] = "Attribute Preference (example)"
     ws["A3"].font = TITLE_FONT
-    headers = ["Dimension", "Level", "% of Units", "Avg Premium Paid ($)"]
+    headers = ["Dimension", "Level", "% of Units", "Avg Premium Paid (€)"]
     rows = [
         ["Brand Tier", "Off-Brand", 0.41, 0.00],
         ["Brand Tier", "Brand", 0.59, 0.87],
@@ -477,7 +489,7 @@ def write_example_sheet(wb):
     # Category Popularity example
     row3 = end_row2 + 16
     ws.cell(row=row3, column=1, value="Category Popularity (example)").font = TITLE_FONT
-    headers3 = ["Category", "Units", "Spend ($)"]
+    headers3 = ["Category", "Units", "Spend (€)"]
     rows3 = [
         ["Produce", 120, 310], ["Pantry & Condiments", 95, 260], ["Dairy & Eggs", 80, 290],
         ["Snacks & Beverages", 70, 180], ["Meat & Seafood", 40, 310],

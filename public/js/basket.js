@@ -11,9 +11,9 @@
     var budgetEl = document.querySelector('.budget');
     if (!budgetEl) return;
     budgetEl.innerHTML =
-      'Budget $' + (budgetCents / 100).toFixed(2) + ' &middot; ' +
-      'Spent $' + (total / 100).toFixed(2) + ' &middot; ' +
-      'Remaining $' + ((budgetCents - total) / 100).toFixed(2);
+      'Budget €' + (budgetCents / 100).toFixed(2) + ' &middot; ' +
+      'Spent €' + (total / 100).toFixed(2) + ' &middot; ' +
+      'Remaining €' + ((budgetCents - total) / 100).toFixed(2);
     budgetEl.dataset.over = total > budgetCents;
   }
 
@@ -30,7 +30,7 @@
   function updateTotalFooter(total, budgetCents) {
     var totalEl = document.querySelector('.basket-page .total');
     if (!totalEl) return;
-    totalEl.textContent = 'Total: $' + (total / 100).toFixed(2) + ' of $' + (budgetCents / 100).toFixed(2) + ' budget';
+    totalEl.textContent = 'Total: €' + (total / 100).toFixed(2) + ' of €' + (budgetCents / 100).toFixed(2) + ' budget';
   }
 
   function showEmptyBasketIfNeeded() {
@@ -94,7 +94,7 @@
           if (priceLine) {
             var unit = Number(form.dataset.priceCents);
             priceLine.textContent =
-              data.quantity + ' × $' + (unit / 100).toFixed(2) + ' = $' + ((unit * data.quantity) / 100).toFixed(2);
+              data.quantity + ' × €' + (unit / 100).toFixed(2) + ' = €' + ((unit * data.quantity) / 100).toFixed(2);
           }
         }
 
