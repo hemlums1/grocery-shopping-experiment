@@ -120,7 +120,7 @@ router.post('/basket/update', async (req, res, next) => {
       return wantsJson ? respond(session.basket, 409) : res.redirect('/done');
     }
 
-    const { itemId, action } = req.body;
+    const { itemId, qtyAction: action } = req.body;
     const item = findItem(itemId);
     if (!item) {
       return respond(session.basket, 400);

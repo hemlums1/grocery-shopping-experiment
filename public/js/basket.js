@@ -2,7 +2,7 @@
   function updateIncrementButtons(total, budgetCents) {
     document.querySelectorAll('.qty-form').forEach(function (form) {
       var price = Number(form.dataset.priceCents);
-      var incBtn = form.querySelector('[name="action"][value="increment"]');
+      var incBtn = form.querySelector('[name="qtyAction"][value="increment"]');
       if (incBtn) incBtn.disabled = total + price > budgetCents;
     });
   }
@@ -45,7 +45,14 @@
     if (!form) return;
     e.preventDefault();
 
-    var actionField = e.submitter && e.submitter.name ? e.submitter.name : 'action';
+    // form.action is unreliable here: a form control named "action" shadows
+    // HTMLFormElement's own .action property (forms use [OverrideBuiltins],
+    // so named controls take priority over built-in IDL attributes — this is
+    // exactly why the button below is named "qtyAction", not "action").
+    // getAttribute() always reads the literal HTML attribute regardless.
+    var url = form.getAttribute('action');
+
+    var actionField = e.submitter && e.submitter.name ? e.submitter.name : 'qtyAction';
     var actionValue = e.submitter ? e.submitter.value : '';
 
     var formData = new FormData(form);
@@ -57,7 +64,7 @@
     var buttons = form.querySelectorAll('button');
     buttons.forEach(function (b) { b.disabled = true; });
 
-    fetch(form.action, {
+    fetch(url, {
       method: 'POST',
       credentials: 'same-origin',
       headers: { Accept: 'application/json' },
@@ -77,7 +84,7 @@
           var qtySpan = form.querySelector('.qty');
           if (qtySpan) qtySpan.textContent = data.quantity;
 
-          var decBtn = form.querySelector('[name="action"][value="decrement"]');
+          var decBtn = form.querySelector('[name="qtyAction"][value="decrement"]');
           if (decBtn) decBtn.disabled = data.quantity === 0;
 
           var priceLine = row && form.parentElement.querySelector('.price');

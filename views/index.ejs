@@ -63,9 +63,9 @@
 
               <form method="POST" action="/basket/update" class="qty-form" data-price-cents="<%= item.priceCents %>">
                 <input type="hidden" name="itemId" value="<%= item.id %>">
-                <button name="action" value="decrement" <%= qty === 0 ? 'disabled' : '' %>>&minus;</button>
+                <button name="qtyAction" value="decrement" <%= qty === 0 ? 'disabled' : '' %>>&minus;</button>
                 <span class="qty"><%= qty %></span>
-                <button name="action" value="increment" <%= (total + item.priceCents > budget) ? 'disabled' : '' %>>+</button>
+                <button name="qtyAction" value="increment" <%= (total + item.priceCents > budget) ? 'disabled' : '' %>>+</button>
               </form>
             </article>
           <% }); %>
