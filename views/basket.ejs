@@ -26,9 +26,9 @@
     <% if (items.length === 0) { %>
       <p class="empty-basket">Your basket is empty. <a href="/">Browse the shop</a> to add something.</p>
     <% } else { %>
-      <div class="basket-list">
+      <div class="basket-list" id="basket-list">
         <% items.forEach(function (item) { %>
-          <article class="basket-row">
+          <article class="basket-row" data-item-id="<%= item.id %>">
             <div class="item-image basket-image">
               <button type="button" class="zoom-trigger">
                 <img src="<%= item.image %>" alt="<%= item.productType %>" loading="lazy">
@@ -43,7 +43,7 @@
               </div>
             </div>
             <div class="basket-row-controls">
-              <form method="POST" action="/basket/update" class="qty-form">
+              <form method="POST" action="/basket/update" class="qty-form" data-price-cents="<%= item.priceCents %>">
                 <input type="hidden" name="itemId" value="<%= item.id %>">
                 <input type="hidden" name="returnTo" value="basket">
                 <button name="action" value="decrement">&minus;</button>
@@ -65,5 +65,6 @@
   </footer>
 
   <%- include('partials/lightbox') %>
+  <script src="/public/js/basket.js" defer></script>
 </body>
 </html>

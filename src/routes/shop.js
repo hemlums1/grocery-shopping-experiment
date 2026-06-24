@@ -102,15 +102,28 @@ router.get('/review', (req, res) => {
 router.post('/basket/update', async (req, res, next) => {
   try {
     const session = req.session;
+    const wantsJson = req.accepts(['html', 'json']) === 'json';
+
+    const respond = (basket, statusCode) => {
+      if (!wantsJson) return res.redirect(resolveReturnTo(req.body.returnTo));
+      const entry = (basket || []).find((e) => e.itemId === req.body.itemId);
+      res.status(statusCode || 200).json({
+        itemId: req.body.itemId,
+        quantity: entry ? entry.quantity : 0,
+        total: basketTotalCents(basket || []),
+        budgetCents: session.budget_cents,
+        basketCount: basketItemCount(basket || []),
+      });
+    };
+
     if (session.status === 'submitted') {
-      return res.redirect('/done');
+      return wantsJson ? respond(session.basket, 409) : res.redirect('/done');
     }
 
-    const { itemId, action, returnTo } = req.body;
-    const redirectTo = resolveReturnTo(returnTo);
+    const { itemId, action } = req.body;
     const item = findItem(itemId);
     if (!item) {
-      return res.redirect(redirectTo);
+      return respond(session.basket, 400);
     }
 
     const basket = session.basket || [];
@@ -124,7 +137,7 @@ router.post('/basket/update', async (req, res, next) => {
       // button once it would exceed budget, so reaching this branch means
       // the client-side check was bypassed — just ignore the request.
       if (total + item.priceCents > session.budget_cents) {
-        return res.redirect(redirectTo);
+        return respond(basket, 200);
       }
       newQty = currentQty + 1;
     } else if (action === 'decrement') {
@@ -141,7 +154,7 @@ router.post('/basket/update', async (req, res, next) => {
     }
 
     await pool.query('UPDATE sessions SET basket = $1 WHERE id = $2', [JSON.stringify(newBasket), session.id]);
-    res.redirect(redirectTo);
+    respond(newBasket, 200);
   } catch (err) {
     next(err);
   }

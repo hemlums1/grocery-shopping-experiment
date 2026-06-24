@@ -54,7 +54,7 @@
               </div>
               <p class="price">$<%= (item.priceCents / 100).toFixed(2) %></p>
 
-              <form method="POST" action="/basket/update" class="qty-form">
+              <form method="POST" action="/basket/update" class="qty-form" data-price-cents="<%= item.priceCents %>">
                 <input type="hidden" name="itemId" value="<%= item.id %>">
                 <button name="action" value="decrement" <%= qty === 0 ? 'disabled' : '' %>>&minus;</button>
                 <span class="qty"><%= qty %></span>
@@ -72,5 +72,6 @@
   </footer>
 
   <%- include('partials/lightbox') %>
+  <script src="/public/js/basket.js" defer></script>
 </body>
 </html>
